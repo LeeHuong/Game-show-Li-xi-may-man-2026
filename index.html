@@ -62,7 +62,7 @@ body {
     z-index: 2;
     max-width: 800px;
     margin: 0 auto;
-    padding-bottom: 80px; /* Chừa chỗ cho footer */
+    padding-bottom: 80px;
 }
 
 h1 {
@@ -336,9 +336,9 @@ button:active {
 
     <div id="result">
         ✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br>
-    Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br>
-    Liên hệ nhận giải: Thông tin mình để dưới này nhé<br>
-                  [⬇️]
+        Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br>
+        Liên hệ nhận giải: Thông tin mình để dưới này nhé<br>
+        [⬇️]
     </div>
 </div>
 
@@ -377,20 +377,15 @@ const CONFIG = {
     symbolCount: 25,
     // Cấu hình giải thưởng
     prizes: [
-        // Giải tiền
+        // Giải tiền - không giới hạn
         { type: 'money', value: 2000, message: '2.000đ' },
         { type: 'money', value: 5000, message: '5.000đ' },
         { type: 'money', value: 10000, message: '10.000đ' },
         { type: 'money', value: 20000, message: '20.000đ' },
-        { type: 'money', value: 50000, message: '50.000đ' },
-        // Giải đặc biệt (lời chúc)
-        { type: 'special', value: 1000, message: '1.000đ' },
-        { type: 'special', value: 1000, message: '1.000đ' },
-        { type: 'special', value: 50000, message: '50.000đ' },
         // Giải lời chúc
         { 
             type: 'wish', 
-            message: '🎊 Chúc mừng bạn đã nhận được lời chúc từ Hương Boy. Chúc em năm mới sức khỏe, bình an, may mắn và luôn vui xinh nhá! 🎊',
+            message: '🎊 Chúc mừng bạn đã nhận được lời chúc từ Hương Boy. Chúc bạn năm mới sức khỏe, bình an, may mắn và luôn vui xinh nhá! 🎊',
             displayMessage: '🎊 Chúc bạn may mắn lần sau! 🎊',
             audio: 'Chúc mừng bạn đã nhận được lời chúc từ Hương Boy. Chúc em năm mới sức khỏe, bình an, may mắn và luôn vui xinh nhá.'
         }
@@ -402,12 +397,18 @@ const CONFIG = {
 // ========== BIẾN TOÀN CỤC ==========
 let gameState = {
     hasSpun: false,
-    specialPrizes: [50000, 1000, 1000] // Giải đặc biệt
+    // Giải đặc biệt có số lượng giới hạn
+    specialPrizes: [
+        { value: 50000, message: '50.000đ', remaining: 1 },  // Chỉ 1 lần 50k
+        { value: 1000, message: '1.000đ', remaining: 2 }     // 2 lần 1k
+    ]
 };
 
 // ========== HIỆU ỨNG RƠI ==========
 function createFallingSymbols() {
     const container = document.getElementById('fallingSymbols');
+    if (!container) return;
+    
     container.innerHTML = '';
     
     for (let i = 0; i < CONFIG.symbolCount; i++) {
@@ -430,13 +431,17 @@ async function playAudio(text, isFirework = false) {
     try {
         if (isFirework) {
             const firework = document.getElementById('fireworkSound');
-            firework.currentTime = 0;
-            await firework.play();
+            if (firework) {
+                firework.currentTime = 0;
+                await firework.play();
+            }
         } else if (text) {
             const audio = document.getElementById('audioPlayer');
-            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=vi&client=gtx`;
-            audio.src = url;
-            await audio.play();
+            if (audio) {
+                const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=vi&client=gtx`;
+                audio.src = url;
+                await audio.play();
+            }
         }
     } catch (error) {
         console.log('Lỗi phát âm thanh:', error);
@@ -455,77 +460,73 @@ function fallbackSpeak(text) {
 }
 
 // ========== XỬ LÝ QUAY ==========
-function handleSpin() {
-    if (gameState.hasSpun) {
-        alert('Bạn đã quay rồi! Nhấn "CHƠI LẠI" để quay tiếp nhé.');
-        return;
-    }
-
-    // Hiệu ứng xoay
-    const lixiBox = document.getElementById('lixiBox');
-    lixiBox.classList.add('spinning');
-    
-    // Phát tiếng pháo
-    playAudio('', true);
-
-    setTimeout(() => {
-        lixiBox.classList.remove('spinning');
-        
-        // Random kết quả
-        const prize = getRandomPrize();
-        
-        // Hiển thị kết quả trong popup
-        showPopupResult(prize);
-        
-        gameState.hasSpun = true;
-    }, 1000);
-}
-
 function getRandomPrize() {
     // 10% cơ hội nhận lời chúc
     if (Math.random() < 0.1) {
         return CONFIG.prizes.find(p => p.type === 'wish');
     }
     
-    // Random giải đặc biệt (nếu còn)
-    if (gameState.specialPrizes.length > 0 && Math.random() < 0.3) {
-        const randomIndex = Math.floor(Math.random() * gameState.specialPrizes.length);
-        const value = gameState.specialPrizes[randomIndex];
-        gameState.specialPrizes.splice(randomIndex, 1);
-        return { type: 'special', value: value, message: value.toLocaleString('vi-VN') + 'đ' };
+    // 30% cơ hội trúng giải đặc biệt (nếu còn)
+    if (Math.random() < 0.3) {
+        // Lọc các giải đặc biệt còn
+        const availableSpecial = gameState.specialPrizes.filter(p => p.remaining > 0);
+        
+        if (availableSpecial.length > 0) {
+            // Random chọn 1 trong các giải đặc biệt còn lại
+            const randomIndex = Math.floor(Math.random() * availableSpecial.length);
+            const prize = availableSpecial[randomIndex];
+            
+            // Giảm số lượng
+            const originalPrize = gameState.specialPrizes.find(p => p.value === prize.value);
+            if (originalPrize) {
+                originalPrize.remaining--;
+            }
+            
+            return { 
+                type: 'special', 
+                value: prize.value, 
+                message: prize.message 
+            };
+        }
     }
     
-    // Random giải thường
-    const normalPrizes = CONFIG.prizes.filter(p => p.type === 'money');
-    return normalPrizes[Math.floor(Math.random() * normalPrizes.length)];
+    // Nếu không trúng giải đặc biệt hoặc đã hết, random giải thường
+    const normalPrizes = [
+        { value: 2000, message: '2.000đ' },
+        { value: 5000, message: '5.000đ' },
+        { value: 10000, message: '10.000đ' },
+        { value: 20000, message: '20.000đ' }
+    ];
+    
+    // Random đều giữa các giải thường
+    const randomIndex = Math.floor(Math.random() * normalPrizes.length);
+    const prize = normalPrizes[randomIndex];
+    
+    return { 
+        type: 'money', 
+        value: prize.value, 
+        message: prize.message 
+    };
 }
 
 function showPopupResult(prize) {
     const popup = document.getElementById('resultPopup');
     const popupMessage = document.getElementById('popupMessage');
     
+    if (!popup || !popupMessage) return;
+    
     if (prize.type === 'wish') {
-        // Hiển thị lời chúc đặc biệt với chữ CHÚC MỪNG màu đỏ
+        // Hiển thị lời chúc
         popupMessage.innerHTML = `
             <div style="text-align: center;">
                 <div style="font-size: 32px; color: #FF0000; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px gold;">🎉 CHÚC MỪNG! 🎉</div>
-                <div style="font-size: 26px; color: #8B0000; margin-bottom: 15px; font-weight: bold;">${prize.displayMessage}</div>
+                <div style="font-size: 26px; color: #8B0000; margin-bottom: 15px; font-weight: bold;">${prize.displayMessage || prize.message}</div>
                 <div style="font-size: 20px; color: #8B0000; font-weight: bold;">🎊 HÃY THỬ VẬN MAY LẦN NỮA NHÉ! 🎊</div>
             </div>
         `;
-        playAudio(prize.audio);
-    } else if (prize.type === 'special') {
-        // Hiển thị giải đặc biệt (tiền) với chữ CHÚC MỪNG màu đỏ
-        popupMessage.innerHTML = `
-            <div style="text-align: center;">
-                <div style="font-size: 32px; color: #FF0000; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px gold;">🎉 CHÚC MỪNG! 🎉</div>
-                <div class="prize-money" style="font-size: 40px;">${prize.message}</div>
-                <div style="font-size: 18px; color: #8B0000; font-weight: bold; margin-top: 10px;">Chúc mừng bạn đã nhận được bao lì xì</div>
-            </div>
-        `;
-        playAudio(`Xin chúc mừng bạn đã nhận được bao lì xì ${prize.message}`);
+        playAudio(prize.audio || prize.message);
     } else {
-        // Hiển thị tiền thường với chữ CHÚC MỪNG màu đỏ
+        // Hiển thị tiền
         popupMessage.innerHTML = `
             <div style="text-align: center;">
                 <div style="font-size: 32px; color: #FF0000; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px gold;">🎉 CHÚC MỪNG! 🎉</div>
@@ -540,25 +541,63 @@ function showPopupResult(prize) {
 }
 
 function closePopup() {
-    document.getElementById('resultPopup').style.display = 'none';
+    const popup = document.getElementById('resultPopup');
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+
+// ========== XỬ LÝ SPIN ==========
+function handleSpin() {
+    if (gameState.hasSpun) {
+        alert('Bạn đã quay rồi! Nhấn "CHƠI LẠI" để quay tiếp nhé.');
+        return;
+    }
+
+    // Hiệu ứng xoay
+    const lixiBox = document.getElementById('lixiBox');
+    if (lixiBox) {
+        lixiBox.classList.add('spinning');
+    }
+    
+    // Phát tiếng pháo
+    playAudio('', true);
+
+    setTimeout(() => {
+        if (lixiBox) {
+            lixiBox.classList.remove('spinning');
+        }
+        
+        // Random kết quả
+        const prize = getRandomPrize();
+        
+        // Hiển thị kết quả trong popup
+        showPopupResult(prize);
+        
+        gameState.hasSpun = true;
+        
+        // Hiển thị số lượng giải còn lại
+        updatePrizeCountDisplay();
+    }, 1000);
 }
 
 // ========== RESET GAME ==========
 function resetGame() {
-    // Reset state
+    // Reset state - KHÔNG reset số lượng giải đặc biệt
     gameState = {
         hasSpun: false,
-        specialPrizes: [50000, 1000, 1000]
+        // Giữ nguyên specialPrizes, không reset lại
+        specialPrizes: gameState.specialPrizes
     };
     
     // Đóng popup
     closePopup();
     
     // Reset kết quả
-    document.getElementById('result').innerHTML = `✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br>
-    Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br>
-    Liên hệ nhận giải: Thông tin mình để dưới này nhé<br>
-                  [⬇️]`;
+    const resultDiv = document.getElementById('result');
+    if (resultDiv) {
+        resultDiv.innerHTML = '✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br> Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br> Liên hệ nhận giải: Thông tin mình để dưới này nhé<br> [⬇️]';
+    }
     
     // Dừng âm thanh
     ['audioPlayer', 'fireworkSound'].forEach(id => {
@@ -571,6 +610,18 @@ function resetGame() {
     
     // Tạo lại hiệu ứng rơi
     createFallingSymbols();
+}
+
+// ========== HIỂN THỊ SỐ LƯỢNG GIẢI CÒN LẠI ==========
+function updatePrizeCountDisplay() {
+    const specialPrizes = gameState.specialPrizes;
+    const prize50k = specialPrizes.find(p => p.value === 50000);
+    const prize1k = specialPrizes.find(p => p.value === 1000);
+    
+    if (prize50k && prize1k) {
+        console.log(`Giải 50.000đ còn: ${prize50k.remaining} lần`);
+        console.log(`Giải 1.000đ còn: ${prize1k.remaining} lần`);
+    }
 }
 
 // ========== ĐÓNG POPUP KHI CLICK RA NGOÀI ==========
@@ -586,8 +637,11 @@ window.onload = function() {
     createFallingSymbols();
     setInterval(createFallingSymbols, 10000); // Refresh hiệu ứng rơi mỗi 10s
     
-     // Đặt câu chúc mặc định
-    document.getElementById('result').innerHTML = '✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br> Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br> Liên hệ nhận giải: Thông tin mình để dưới này nhé<br> [⬇️]';
+    // Đặt câu chúc mặc định
+    const resultDiv = document.getElementById('result');
+    if (resultDiv) {
+        resultDiv.innerHTML = '✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br> Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br> Liên hệ nhận giải: Thông tin mình để dưới này nhé<br> [⬇️]';
+    }
 };
 </script>
 
