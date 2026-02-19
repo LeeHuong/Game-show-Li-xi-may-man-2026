@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Mời bạn nhận lì xì</title>
+
+<!-- META PREVIEW LINK -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mời bạn nhận lì xì">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://i.ibb.co/twBjTDvL/li-xi-tet.webp">
+<meta property="og:url" content="https://leehuong.github.io/Chuc-Tet/">
+<meta property="og:site_name" content="Mời bạn nhận lì xì">
+
+<style>
+body {
+font-family: Aptos Serif;
+text-align: center;
+background: linear-gradient(135deg, #8B0000, #FF4500);
+color: white;
+padding: 20px;
+}
+
+button {
+background: #FFD700;
+border: none;
+padding: 15px 30px;
+font-size: 20px;
+border-radius: 50px;
+cursor: pointer;
+margin: 20px;
+box-shadow: 0 0 20px gold;
+font-weight: bold;
+}
+
+button:hover {
+transform: scale(1.1);
+transition: 0.3s;
+}
+
+#result {
+font-size: 30px;
+margin: 30px;
+padding: 30px;
+background: rgba(255,255,255,0.2);
+border-radius: 20px;
+border: 2px solid gold;
+min-height: 150px;
+}
+
+.bao-li-xi {
+width: 300px;
+height: 300px;
+margin: 20px auto;
+background: url('https://i.ibb.co/twBjTDvL/li-xi-tet.webp') no-repeat center;
+background-size: contain;
+cursor: pointer;
+transition: transform 0.3s;
+}
+
+.bao-li-xi:hover {
+transform: scale(1.05);
+}
+
+.spinning {
+animation: spin 1s ease-in-out;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg) scale(1); }
+50% { transform: rotate(360deg) scale(1.2); }
+100% { transform: rotate(720deg) scale(1); }
+}
+
+.money {
+color: gold;
+font-size: 50px;
+font-weight: bold;
+text-shadow: 0 0 20px orange;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧧 LÌ XÌ MAY MẮN 2026 🧧</h1>
+<h3>🐎 Mừng xuân Bính Ngọ 🐎</h3>
+
+<div class="bao-li-xi" id="spinWheel" onclick="spinAndSpeak()"></div>
+
+<button onclick="spinAndSpeak()">🎰 QUAY LÌ XÌ 🎰</button>
+
+<div id="result">⚡ Nhấn quay để nhận lộc đầu năm ⚡</div>
+
+<audio id="audioPlayer" style="display:none;"></audio>
+
+<script>
+let specialPrizes=[50000,1000,1000];
+const normalPrizes=[2000,5000,10000,20000];
+const textPrize="🎊 Chúc bạn may mắn lần sau! 🎊";
+let gameOver=false;
+
+function playNumberAudio(prize){
+const audio=document.getElementById('audioPlayer');
+let text='';
+
+if(typeof prize==='number'){
+const formattedAmount=prize.toLocaleString('vi-VN');
+text=`Xin chúc mừng bạn đã nhận được bao lì xì ${formattedAmount} đồng`;
+}else{
+text=`Bạn thật may mắn, bạn đã nhận được giải thưởng: ${prize}`;
+}
+
+const url=`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=vi&client=gtx`;
+audio.src=url;
+audio.play().catch(()=>fallbackSpeak(text));
+}
+
+function fallbackSpeak(text){
+if('speechSynthesis'in window){
+window.speechSynthesis.cancel();
+const utterance=new SpeechSynthesisUtterance(text);
+utterance.lang='vi-VN';
+utterance.rate=0.9;
+window.speechSynthesis.speak(utterance);
+}
+}
+
+function spinAndSpeak(){
+const wheel=document.getElementById('spinWheel');
+wheel.classList.add('spinning');
+
+let prize;
+const takeTextPrize=Math.random()<0.1;
+
+if(takeTextPrize){
+prize=textPrize;
+}else{
+if(specialPrizes.length>0){
+const takeSpecial=Math.random()<0.3;
+if(takeSpecial){
+const randomIndex=Math.floor(Math.random()*specialPrizes.length);
+prize=specialPrizes[randomIndex];
+specialPrizes.splice(randomIndex,1);
+}else{
+prize=normalPrizes[Math.floor(Math.random()*normalPrizes.length)];
+}
+}else{
+prize=normalPrizes[Math.floor(Math.random()*normalPrizes.length)];
+}
+}
+
+setTimeout(()=>{
+wheel.classList.remove('spinning');
+
+let resultHTML='';
+
+if(typeof prize==='string'){
+resultHTML=`
+🎉 CHÚC MỪNG! 🎉<br>
+<span style="font-size:35px;color:#FFD700;">${prize}</span><br>
+<span style="font-size:20px;">🎊 HÃY THỬ VẬN MAY LẦN NỮA NHÉ! 🎊</span>
+`;
+}else{
+resultHTML=`
+🎉 CHÚC MỪNG! 🎉<br>
+Bạn nhận được bao lì xì: <span class="money">${prize.toLocaleString('vi-VN')}₫</span><br>
+<span style="font-size:20px;">🧧 LÌ XÌ MAY MẮN ĐẦU NĂM 🧧</span>
+`;
+}
+
+document.getElementById('result').innerHTML=resultHTML;
+playNumberAudio(prize);
+
+},1000);
+}
+</script>
+
+</body>
+</html>
