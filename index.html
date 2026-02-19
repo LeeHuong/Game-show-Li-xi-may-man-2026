@@ -2,188 +2,588 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Chúc mừng bạn đã nhận được được 1 bao lì xì</title>
+<title>Lì xì may mắn - Huong Boy</title>
 
 <!-- META PREVIEW LINK -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Chúc mừng bạn đã nhận được được 1 bao lì xì">
-<meta property="og:description" content="">
+<meta property="og:title" content="Chúc mừng bạn đã nhận được 1 bao lì xì">
+<meta property="og:description" content="Lì xì may mắn đầu năm - Mừng xuân Bính Ngọ 2026">
 <meta property="og:image" content="https://i.ibb.co/My8R3qF6/nhan-li-xi-huong.jpg">
 <meta property="og:url" content="https://leehuong.github.io/Chuc-Tet/">
 <meta property="og:site_name" content="Mời bạn nhận lì xì">
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-font-family: Aptos Serif;
-text-align: center;
-background: linear-gradient(135deg, #8B0000, #FF4500);
-color: white;
-padding: 20px;
+    font-family: 'Aptos Serif', serif;
+    text-align: center;
+    background: linear-gradient(135deg, #8B0000, #FF4500);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
 }
 
-button {
-background: #FFD700;
-border: none;
-padding: 15px 30px;
-font-size: 20px;
-border-radius: 50px;
-cursor: pointer;
-margin: 20px;
-box-shadow: 0 0 20px gold;
-font-weight: bold;
+/* Hiệu ứng rơi */
+.falling-symbols {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
 
-button:hover {
-transform: scale(1.1);
-transition: 0.3s;
+.symbol {
+    position: absolute;
+    font-size: 24px;
+    animation: fall linear infinite;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 5px gold);
+    user-select: none;
 }
 
-#result {
-font-size: 30px;
-margin: 30px;
-padding: 30px;
-background: rgba(255,255,255,0.2);
-border-radius: 20px;
-border: 2px solid gold;
-min-height: 150px;
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+    }
 }
 
-.bao-li-xi {
-width: 300px;
-height: 300px;
-margin: 20px auto;
-background: url('https://i.ibb.co/twBjTDvL/li-xi-tet.webp') no-repeat center;
-background-size: contain;
-cursor: pointer;
-transition: transform 0.3s;
+/* Nội dung chính */
+.content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 80px; /* Chừa chỗ cho footer */
 }
 
-.bao-li-xi:hover {
-transform: scale(1.05);
+h1 {
+    font-size: clamp(24px, 5vw, 40px);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: clamp(18px, 4vw, 28px);
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+/* Bao lì xì */
+.lixi-container {
+    width: min(300px, 80%);
+    height: min(300px, 80vw);
+    margin: 20px auto;
+    background: url('https://i.ibb.co/GwWCFYg/Phong-bao-li-xi.jpg') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.lixi-container:hover {
+    transform: scale(1.05);
 }
 
 .spinning {
-animation: spin 1s ease-in-out;
+    animation: spin 1s ease-in-out;
 }
 
 @keyframes spin {
-0% { transform: rotate(0deg) scale(1); }
-50% { transform: rotate(360deg) scale(1.2); }
-100% { transform: rotate(720deg) scale(1); }
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(360deg) scale(1.2); }
+    100% { transform: rotate(720deg) scale(1); }
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+button {
+    background: #FFD700;
+    border: none;
+    padding: 12px 24px;
+    font-size: clamp(16px, 4vw, 20px);
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 20px gold;
+    font-weight: bold;
+    transition: all 0.3s;
+    min-width: 160px;
+}
+
+button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 30px gold;
+}
+
+button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.reset-btn {
+    background: #4CAF50;
+    color: white;
+    box-shadow: 0 0 20px #4CAF50;
+}
+
+/* Kết quả */
+#result {
+    font-size: clamp(20px, 5vw, 30px);
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    border: 2px solid gold;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .money {
-color: gold;
-font-size: 50px;
-font-weight: bold;
-text-shadow: 0 0 20px orange;
+    color: gold;
+    font-size: clamp(30px, 8vw, 50px);
+    font-weight: bold;
+    text-shadow: 0 0 20px orange;
+}
+
+/* Popup */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.popup-content {
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.popup-image {
+    width: 130%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 0 30px gold;
+    margin-left: -15%;
+}
+
+.popup-text {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    padding: 10px;
+    background: rgba(254, 218, 218, 0.95);
+    border-radius: 10px;
+    border: 2px solid gold;
+    color: #C43C2A;
+    font-size: clamp(14px, 3vw, 18px);
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+}
+
+.prize-money {
+    color: #8B0000;
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: bold;
+    text-shadow: 0 0 10px gold;
+    margin-bottom: 10px;
+}
+
+.close-popup {
+    position: absolute;
+    top: -10px;
+    right: -80px;
+    width: 35px;
+    height: 35px;
+    background: #FFD700;
+    border: 2px solid white;
+    border-radius: 50%;
+    color: #8B0000;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    z-index: 1001;
+}
+
+.close-popup:hover {
+    transform: scale(1.1);
+    background: white;
+}
+
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    color: #FFD700;
+    padding: 12px 20px;
+    font-size: 14px;
+    z-index: 100;
+    border-top: 2px solid gold;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.footer a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.marquee {
+    white-space: nowrap;
+    overflow: hidden;
+    animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Responsive cho footer */
+@media (max-width: 768px) {
+    .footer {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+    
+    .footer-content {
+        gap: 3px;
+    }
+    
+    .content {
+        padding-bottom: 100px;
+    }
 }
 </style>
 </head>
-
 <body>
 
-<h1>🧧 LÌ XÌ MAY MẮN 2026 🧧</h1>
-<h3>🐎 Mừng xuân Bính Ngọ 🐎</h3>
+<div class="falling-symbols" id="fallingSymbols"></div>
 
-<div class="bao-li-xi" id="spinWheel" onclick="spinAndSpeak()"></div>
+<div class="content">
+    <h1>🧧 LÌ XÌ MAY MẮN 2026 🧧</h1>
+    <h3>🐎 Mừng xuân Bính Ngọ 🐎</h3>
 
-<button onclick="spinAndSpeak()">🎰 QUAY LÌ XÌ 🎰</button>
+    <div class="lixi-container" id="lixiBox" onclick="handleSpin()"></div>
 
-<div id="result">⚡ Nhấn quay để nhận lộc đầu năm ⚡</div>
+    <div class="button-group">
+        <button onclick="handleSpin()">🎰 QUAY LÌ XÌ 🎰</button>
+        <button class="reset-btn" onclick="resetGame()">🔄 CHƠI LẠI 🔄</button>
+    </div>
 
-<audio id="audioPlayer" style="display:none;"></audio>
+    <div id="result">
+        '✨🐎 Nhấp vào bao lì xì để nhận lộc của bạn nhé! 🐎✨
+    </div>
+</div>
+
+<!-- Popup hiển thị kết quả -->
+<div class="popup" id="resultPopup">
+    <div class="popup-content">
+        <div class="close-popup" onclick="closePopup()">✕</div>
+        <img src="https://i.ibb.co/2YvGWPd3/khung-hien-thi-loi-chuc.jpg" alt="Khung kết quả" class="popup-image">
+        <div class="popup-text" id="popupMessage"></div>
+    </div>
+</div>
+
+<!-- Footer với thông tin liên hệ -->
+<div class="footer">
+    <div class="footer-content">
+        <div class="marquee">
+            Made by HoungLee - Zalo/📞: 0967.244.431
+        </div>
+        <div>
+            <a href="https://www.facebook.com/ceo.boss.7" target="_blank">Facebook: https://www.facebook.com/ceo.boss.7</a> | 
+            <a href="https://www.tiktok.com/@boyloynhoy43" target="_blank">Tiktok: @boyloynhoy43</a>
+        </div>
+    </div>
+</div>
+
+<!-- Audio -->
+<audio id="audioPlayer" style="display: none;"></audio>
+<audio id="fireworkSound" style="display: none;">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/09/audio_f59d3f4a98.mp3?filename=freesound_community-fireworks-29629.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-let specialPrizes=[50000,1000,1000];
-const normalPrizes=[2000,5000,10000,20000];
-const textPrize="🎊 Chúc bạn may mắn lần sau! 🎊";
-let gameOver=false;
+// ========== CẤU HÌNH ==========
+const CONFIG = {
+    symbols: ['🌸', '🌼', '🧧', '🏮', '✨', '💰', '🍊', '🎇', '🧨', '🎋'],
+    symbolCount: 25,
+    // Cấu hình giải thưởng
+    prizes: [
+        // Giải tiền
+        { type: 'money', value: 2000, message: '2.000đ' },
+        { type: 'money', value: 5000, message: '5.000đ' },
+        { type: 'money', value: 10000, message: '10.000đ' },
+        { type: 'money', value: 20000, message: '20.000đ' },
+        { type: 'money', value: 50000, message: '50.000đ' },
+        // Giải đặc biệt (lời chúc)
+        { type: 'special', value: 1000, message: '1.000đ' },
+        { type: 'special', value: 1000, message: '1.000đ' },
+        { type: 'special', value: 50000, message: '50.000đ' },
+        // Giải lời chúc
+        { 
+            type: 'wish', 
+            message: '🎊 Chúc mừng bạn đã nhận được lời chúc từ Hương Boy. Chúc em năm mới sức khỏe, bình an, may mắn và luôn vui xinh nhá! 🎊',
+            displayMessage: '🎊 Chúc bạn may mắn lần sau! 🎊',
+            audio: 'Chúc mừng bạn đã nhận được lời chúc từ Hương Boy. Chúc em năm mới sức khỏe, bình an, may mắn và luôn vui xinh nhá.'
+        }
+    ],
+    fallDuration: { min: 5, max: 15 },
+    fallDelay: { min: 0, max: 5 }
+};
 
-function playNumberAudio(prize){
-const audio=document.getElementById('audioPlayer');
-let text='';
+// ========== BIẾN TOÀN CỤC ==========
+let gameState = {
+    hasSpun: false,
+    specialPrizes: [50000, 1000, 1000] // Giải đặc biệt
+};
 
-if(typeof prize==='number'){
-const formattedAmount=prize.toLocaleString('vi-VN');
-text=`Xin chúc mừng bạn đã nhận được bao lì xì ${formattedAmount} đồng`;
-}else{
-text=`Bạn thật may mắn, bạn đã nhận được giải thưởng: ${prize}`;
+// ========== HIỆU ỨNG RƠI ==========
+function createFallingSymbols() {
+    const container = document.getElementById('fallingSymbols');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < CONFIG.symbolCount; i++) {
+        const symbol = document.createElement('div');
+        symbol.className = 'symbol';
+        symbol.textContent = CONFIG.symbols[Math.floor(Math.random() * CONFIG.symbols.length)];
+        
+        symbol.style.left = Math.random() * 100 + '%';
+        symbol.style.top = -Math.random() * 100 + 'px';
+        symbol.style.fontSize = (20 + Math.random() * 30) + 'px';
+        symbol.style.animationDuration = (CONFIG.fallDuration.min + Math.random() * (CONFIG.fallDuration.max - CONFIG.fallDuration.min)) + 's';
+        symbol.style.animationDelay = Math.random() * CONFIG.fallDelay.max + 's';
+        
+        container.appendChild(symbol);
+    }
 }
 
-const url=`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=vi&client=gtx`;
-audio.src=url;
-audio.play().catch(()=>fallbackSpeak(text));
+// ========== XỬ LÝ ÂM THANH ==========
+async function playAudio(text, isFirework = false) {
+    try {
+        if (isFirework) {
+            const firework = document.getElementById('fireworkSound');
+            firework.currentTime = 0;
+            await firework.play();
+        } else if (text) {
+            const audio = document.getElementById('audioPlayer');
+            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=vi&client=gtx`;
+            audio.src = url;
+            await audio.play();
+        }
+    } catch (error) {
+        console.log('Lỗi phát âm thanh:', error);
+        if (!isFirework && text) fallbackSpeak(text);
+    }
 }
 
-function fallbackSpeak(text){
-if('speechSynthesis'in window){
-window.speechSynthesis.cancel();
-const utterance=new SpeechSynthesisUtterance(text);
-utterance.lang='vi-VN';
-utterance.rate=0.9;
-window.speechSynthesis.speak(utterance);
-}
-}
-
-function spinAndSpeak(){
-const wheel=document.getElementById('spinWheel');
-wheel.classList.add('spinning');
-
-let prize;
-const takeTextPrize=Math.random()<0.1;
-
-if(takeTextPrize){
-prize=textPrize;
-}else{
-if(specialPrizes.length>0){
-const takeSpecial=Math.random()<0.3;
-if(takeSpecial){
-const randomIndex=Math.floor(Math.random()*specialPrizes.length);
-prize=specialPrizes[randomIndex];
-specialPrizes.splice(randomIndex,1);
-}else{
-prize=normalPrizes[Math.floor(Math.random()*normalPrizes.length)];
-}
-}else{
-prize=normalPrizes[Math.floor(Math.random()*normalPrizes.length)];
-}
+function fallbackSpeak(text) {
+    if (!window.speechSynthesis) return;
+    
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'vi-VN';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
 }
 
-setTimeout(()=>{
-wheel.classList.remove('spinning');
+// ========== XỬ LÝ QUAY ==========
+function handleSpin() {
+    if (gameState.hasSpun) {
+        alert('Bạn đã quay rồi! Nhấn "CHƠI LẠI" để quay tiếp nhé.');
+        return;
+    }
 
-let resultHTML='';
+    // Hiệu ứng xoay
+    const lixiBox = document.getElementById('lixiBox');
+    lixiBox.classList.add('spinning');
+    
+    // Phát tiếng pháo
+    playAudio('', true);
 
-if(typeof prize==='string'){
-resultHTML=`
-🎉 CHÚC MỪNG! 🎉<br>
-<span style="font-size:35px;color:#FFD700;">${prize}</span><br>
-<span style="font-size:20px;">🎊 HÃY THỬ VẬN MAY LẦN NỮA NHÉ! 🎊</span>
-`;
-}else{
-resultHTML=`
-🎉 CHÚC MỪNG! 🎉<br>
-Bạn nhận được bao lì xì: <span class="money">${prize.toLocaleString('vi-VN')}₫</span><br>
-<span style="font-size:20px;">🧧 LÌ XÌ MAY MẮN ĐẦU NĂM 🧧</span>
-`;
+    setTimeout(() => {
+        lixiBox.classList.remove('spinning');
+        
+        // Random kết quả
+        const prize = getRandomPrize();
+        
+        // Hiển thị kết quả trong popup
+        showPopupResult(prize);
+        
+        gameState.hasSpun = true;
+    }, 1000);
 }
 
-document.getElementById('result').innerHTML=resultHTML;
-playNumberAudio(prize);
-
-},1000);
+function getRandomPrize() {
+    // 10% cơ hội nhận lời chúc
+    if (Math.random() < 0.1) {
+        return CONFIG.prizes.find(p => p.type === 'wish');
+    }
+    
+    // Random giải đặc biệt (nếu còn)
+    if (gameState.specialPrizes.length > 0 && Math.random() < 0.3) {
+        const randomIndex = Math.floor(Math.random() * gameState.specialPrizes.length);
+        const value = gameState.specialPrizes[randomIndex];
+        gameState.specialPrizes.splice(randomIndex, 1);
+        return { type: 'special', value: value, message: value.toLocaleString('vi-VN') + 'đ' };
+    }
+    
+    // Random giải thường
+    const normalPrizes = CONFIG.prizes.filter(p => p.type === 'money');
+    return normalPrizes[Math.floor(Math.random() * normalPrizes.length)];
 }
+
+function showPopupResult(prize) {
+    const popup = document.getElementById('resultPopup');
+    const popupMessage = document.getElementById('popupMessage');
+    
+    if (prize.type === 'wish') {
+        // Hiển thị lời chúc đặc biệt với chữ CHÚC MỪNG màu đỏ
+        popupMessage.innerHTML = `
+            <div style="text-align: center;">
+                <div style="font-size: 32px; color: #FF0000; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px gold;">🎉 CHÚC MỪNG! 🎉</div>
+                <div style="font-size: 26px; color: #8B0000; margin-bottom: 15px; font-weight: bold;">${prize.displayMessage}</div>
+                <div style="font-size: 20px; color: #8B0000; font-weight: bold;">🎊 HÃY THỬ VẬN MAY LẦN NỮA NHÉ! 🎊</div>
+            </div>
+        `;
+        playAudio(prize.audio);
+    } else if (prize.type === 'special') {
+        // Hiển thị giải đặc biệt (tiền) với chữ CHÚC MỪNG màu đỏ
+        popupMessage.innerHTML = `
+            <div style="text-align: center;">
+                <div style="font-size: 32px; color: #FF0000; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px gold;">🎉 CHÚC MỪNG! 🎉</div>
+                <div class="prize-money" style="font-size: 40px;">${prize.message}</div>
+                <div style="font-size: 18px; color: #8B0000; font-weight: bold; margin-top: 10px;">Chúc mừng bạn đã nhận được bao lì xì</div>
+            </div>
+        `;
+        playAudio(`Xin chúc mừng bạn đã nhận được bao lì xì ${prize.message}`);
+    } else {
+        // Hiển thị tiền thường với chữ CHÚC MỪNG màu đỏ
+        popupMessage.innerHTML = `
+            <div style="text-align: center;">
+                <div style="font-size: 32px; color: #FF0000; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px gold;">🎉 CHÚC MỪNG! 🎉</div>
+                <div class="prize-money" style="font-size: 40px;">${prize.message}</div>
+                <div style="font-size: 18px; color: #8B0000; font-weight: bold; margin-top: 10px;">Chúc mừng bạn đã nhận được bao lì xì</div>
+            </div>
+        `;
+        playAudio(`Xin chúc mừng bạn đã nhận được bao lì xì ${prize.message}`);
+    }
+    
+    popup.style.display = 'flex';
+}
+
+function closePopup() {
+    document.getElementById('resultPopup').style.display = 'none';
+}
+
+// ========== RESET GAME ==========
+function resetGame() {
+    // Reset state
+    gameState = {
+        hasSpun: false,
+        specialPrizes: [50000, 1000, 1000]
+    };
+    
+    // Đóng popup
+    closePopup();
+    
+    // Reset kết quả về câu chúc mặc định
+    document.getElementById('result').innerHTML = '✨🐎 Xuân an khang - Đong đầy hạnh phúc 🐎✨';
+    
+    // Dừng âm thanh
+    ['audioPlayer', 'fireworkSound'].forEach(id => {
+        const audio = document.getElementById(id);
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+    });
+    
+    // Tạo lại hiệu ứng rơi
+    createFallingSymbols();
+}
+
+// ========== ĐÓNG POPUP KHI CLICK RA NGOÀI ==========
+window.onclick = function(event) {
+    const popup = document.getElementById('resultPopup');
+    if (event.target === popup) {
+        closePopup();
+    }
+};
+
+// ========== KHỞI TẠO ==========
+window.onload = function() {
+    createFallingSymbols();
+    setInterval(createFallingSymbols, 10000); // Refresh hiệu ứng rơi mỗi 10s
+    
+    // Đặt câu chúc mặc định
+    document.getElementById('result').innerHTML = ''✨🐎 Xuân an khang - Đong đầy hạnh phúc 🐎✨';
+};
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
