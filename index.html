@@ -336,7 +336,9 @@ button:active {
 
     <div id="result">
         ✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br>
-    Số lượng có hạn  🤑🤑🤑😁😁 🐎✨
+    Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br>
+    Liên hệ nhận giải: Thông tin mình để dưới này nhé<br>
+                  [⬇️]
     </div>
 </div>
 
@@ -553,7 +555,10 @@ function resetGame() {
     closePopup();
     
     // Reset kết quả
-    document.getElementById('result').innerHTML = '✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br>Số lượng có hạn  🤑🤑🤑😁😁 🐎✨';
+    document.getElementById('result').innerHTML = `✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br>
+    Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br>
+    Liên hệ nhận giải: Thông tin mình để dưới này nhé<br>
+                  [⬇️]`;
     
     // Dừng âm thanh
     ['audioPlayer', 'fireworkSound'].forEach(id => {
@@ -582,7 +587,7 @@ window.onload = function() {
     setInterval(createFallingSymbols, 10000); // Refresh hiệu ứng rơi mỗi 10s
     
      // Đặt câu chúc mặc định
-    document.getElementById('result').innerHTML = '✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br>Số lượng có hạn  🤑🤑🤑😁😁 🐎✨';
+    document.getElementById('result').innerHTML = '✨🐎 Chọn quay để nhận bao lì xì của bạn nhé!<br> Số lượng có hạn  🤑🤑🤑😁😁 🐎✨<br> Liên hệ nhận giải: Thông tin mình để dưới này nhé<br> [⬇️]';
 };
 </script>
 
